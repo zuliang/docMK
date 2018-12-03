@@ -1,1 +1,7 @@
 site_name: My Docs
+nav:
+  - Home: index.md
+  - Algorithm: Algorithm.md
+  - pow(x,n): pow.md
+  - 二叉树遍历: binaryTreeOrder.md
+theme: readthedocs
