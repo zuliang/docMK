@@ -8,7 +8,8 @@
 
 这里主要结合python源码和python自身介绍相关的编程范式，详细分为以下几个部分：
 
-1. 泛型编程
-1. 函数式编程
+1. [泛型编程](GenericProgramming.md)
+1. [函数式编程](FunctionalProgramming.md)
 1. 面向对象编程
 1. 逻辑编程
+

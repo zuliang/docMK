@@ -11,7 +11,7 @@ void swap(int* x, int* y)
 }
 ```
 如果希望swap更类型通用，泛型版本swap如下
-```
+```c
 void swap(void* x, void* y, size_t size)
 {
     char tmp[size];
@@ -124,6 +124,16 @@ case TARGET(LOAD_NAME): {
     DISPATCH();
 }
 ```
+`ROT_TWO`
+```c
+case TARGET(ROT_TWO): {
+    PyObject *top = TOP();
+    PyObject *second = SECOND();
+    SET_TOP(second);
+    SET_SECOND(top);
+    FAST_DISPATCH();
+}
+```
 `STORE_NAME`:
 ```c
 case TARGET(STORE_NAME): {
@@ -157,3 +167,30 @@ case TARGET(LOAD_CONST): {
     FAST_DISPATCH();
 }
 ```
+`RETURN_VALUE`
+```c
+case TARGET(RETURN_VALUE): {
+    retval = POP();
+    assert(f->f_iblock == 0);
+    goto return_or_yield;
+}
+```
+## 小结
+总体来说，C语言把非常底层的控制权交给了程序员，它的设计理念为：
+1. 相信程序员；
+2. 不会阻止程序员做任何底层的事
+3. 保存语言的最小最简特征；
+4. 保证C语言的最快运行速度，哪怕牺牲移植性。
+
+C语言伟大之处在于程序员在高级语言的特性之上还能简单地做任何底层上的微观控制。不过，这只是针对底层指令控制和过程式编程方式，而对于更高阶更抽象的编程模型来说，C语言基于过程和底层的初衷设计方式就成为它的短板。所以，我们需要更贴近业务的抽象语言。
+
+在C语言之后，C++、java、C#、python等语言前仆后继，都在试图解决那个时代的特定问题。再回过头来说，编程范式其实是程序的指导思想，它也代表了这门语言的设计方向。我们不能说哪种范式更优越，只能说各有千秋。
+
+这里也顺便举一个动态类型语言的坑，如下代码，在不同的编程语言会有不一样的结果：
+```
+x = 5
+y = "3"
+z = x + y
+```
+如果是Visual Basic的结果是8，JavaScript是"53"，python和go就会运行时异常。这里想带出的一个概念就是任何一门语言都有特定的类型系统。动态类型的类型检查是在运行时完成，这个在方便的同时也会在某些情况下增加编程的复杂度，这里也印证了为何pep484会提倡用type hint把变量的类型和函数声明重新规范起来。
+
